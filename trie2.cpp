@@ -4,8 +4,6 @@
  *
  */
 #include <fstream>
-#include <iostream>
-#include <string>
 #define FIN "trie.in"
 #define FOUT "trie.out"
 #define ALPHABET_SIZE 26
@@ -28,7 +26,7 @@ struct Trie {
        }
 };
 
-Trie *T = new Trie();
+struct Trie *T = new struct Trie();
 
 void add_word(struct Trie *node, char *s) {
 
@@ -49,9 +47,12 @@ void add_word(struct Trie *node, char *s) {
      add_word(node->sons[*s - 'a'], s + 1);      
 };
 
-bool delete_word(Trie *node, char *s) {
+bool delete_word(struct Trie *node, char *s) {
 
-     if(*s == 0) node->words--;
+     if(*s == 0)  { 
+
+               node->words--;
+     }
 
      else {
 
@@ -73,7 +74,7 @@ bool delete_word(Trie *node, char *s) {
      return 0;  
 };
 
-int count_words(Trie *node, char *s) {
+int count_words(struct Trie *node, char *s) {
 
      if(*s == 0) return node->words; 
 
@@ -82,11 +83,17 @@ int count_words(Trie *node, char *s) {
      return count_words( node->sons[*s - 'a'], s + 1 );      
 };
 
-int longest_common_prefix(Trie *node, char *s, int prefix) {
+int longest_common_prefix(struct Trie *node, char *s, int prefix) {
 
-     if(*s == 0) return prefix; 
+     if(*s == 0) { 
 
-     if( node->sons[ *s - 'a'] != NULL ) return longest_common_prefix( node->sons[*s - 'a'], s + 1, prefix + 1 );
+               return prefix; 
+     }
+
+     if( node->sons[ *s - 'a'] != NULL ) { 
+
+               return longest_common_prefix( node->sons[*s - 'a'], s + 1, prefix + 1 );
+     }
 
      return prefix; 
 };
@@ -99,9 +106,7 @@ int main() {
 
     ifstream fin( FIN );
 
-    ofstream fout( FOUT );
-
-    struct Trie *T = new struct Trie();
+    ofstream fout( FOUT );    
 
     while( fin>>type>>str ) {
 
