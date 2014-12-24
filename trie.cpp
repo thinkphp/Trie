@@ -149,5 +149,9 @@ int main() {
            }
     }
 
+    fin.close();
+
+    fout.close();
+
     return(0); 
 };
