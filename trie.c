@@ -6,127 +6,126 @@
 struct Trie {
 
        int num_prefixes,
-
            num_words;
-
+  
        struct Trie *sons[ 26 ];
+};
 
-       Trie() {
-           
-           num_prefixes = num_words = 0;
+struct Trie* createNode() {
 
-           for(int i = 0; i < 26; i++) sons[ i ] = 0;
-       }; 
+       int i;
 
-       void add(char *s) {
+       struct Trie *node = (struct Trie*)malloc(sizeof(struct Trie));
 
-            struct Trie *root = this; 
+       node->num_words = node->num_prefixes = 0; 
 
-            while(*s != '\0') {
+       for(i = 0; i < 26; i++) node->sons[ i ] = 0;
 
-                   if(root->sons[*s - 'a'] == 0) root->sons[*s - 'a'] = new Trie();
+       return node;          
+};
 
-                   root = root->sons[*s - 'a'];
+void add(struct Trie* node, char *s) {
 
-                   root->num_prefixes++; 
+         while(*s != '\0') {
 
-                   s++;
-            }
+               if(node->sons[*s - 'a'] == 0) node->sons[*s - 'a'] = createNode(); 
 
-            root->num_words++; 
-       };
+               node = node->sons[*s - 'a'];
 
-       void erase(char *s) {
+               node->num_prefixes++;
+  
+               s++;
+         }
 
-            struct Trie *root = this; 
+         node->num_words++; 
+};
 
-            while(*s != '\0') {
+void erase(struct Trie *node, char *s) {
 
-                   root = root->sons[*s - 'a'];
 
-                   root->num_prefixes--; 
+         while(*s != '\0') {
 
-                   s++;
-            }
+               node = node->sons[*s - 'a'];
 
-            root->num_words--; 
-       };
+               node->num_prefixes--;
+  
+               s++;
+         }
 
-       int search(char *s) {
+         node->num_words--; 
 
-            struct Trie *root = this; 
+};
 
-            while(*s != '\0') {
+int search(struct Trie *node, char *s) {
 
-                   if(root->sons[*s - 'a'] == 0) return 0;
+         while(*s != '\0') {
 
-                   root = root->sons[*s - 'a'];
+               if(node->sons[*s - 'a'] == 0) return 0;
 
-                   s++;
-            }
+               node = node->sons[*s - 'a'];
+  
+               s++;
+         }
 
-            return root->num_words; 
-       };
+         return node->num_words; 
+};
 
-       int prefix(char *s) {
 
-            struct Trie *root = this; 
+int prefix(struct Trie *node, char *s) {
 
-            int longest_prefix = 0;
+         int pref = 0;
 
-            while(*s != '\0') {
+         while(*s != '\0') {
 
-                   if(root->sons[*s - 'a'] == 0) return longest_prefix;
+               if(node->sons[*s - 'a'] == 0) return pref;
 
-                   root = root->sons[*s - 'a'];
+               node = node->sons[*s - 'a'];
+  
+               if(node->num_prefixes == 0) return pref;
 
-                   if(root->num_prefixes == 0) return longest_prefix;
+               s++;
 
-                   longest_prefix++;
+               pref++;
+         }
 
-                   s++;
-            }
-
-            return longest_prefix; 
-       };
-
-} *root;
+         return pref; 
+};
 
 int main() {
 
-    freopen(FIN, "r", stdin);
+    struct Trie* T = createNode();
 
-    freopen(FOUT, "w", stdout);
+    int type;
 
     char str[ 26 ];
 
-    int type; 
+    freopen(FIN, "r", stdin); 
 
-    root = new Trie;
- 
-    while(scanf("%d %s",&type,&str) > 0) {
+    freopen(FOUT, "w", stdout); 
 
-          switch(type) {
+    while( scanf("%d%s", &type, str) > 0 ) {
 
-                 case 0: 
-                 root->add(str);
-                 break;
+           switch( type ) {
 
-                 case 1:
-                 root->erase(str);
-                 break;   
+                   case 0: 
+                   add(T, str);
+                   break;
 
-                 case 2:
-                 printf("%d\n", root->search(str));
-                 break;   
+                   case 1: 
+                   erase(T, str);
+                   break;
 
-                 case 3:
-                 printf("%d\n", root->prefix(str));
-                 break;   
-          }          
-    } 
+                   case 2: 
+                   printf("%d\n", search(T, str));
+                   break;
 
-    fclose( stdin );   
+                   case 3: 
+                   printf("%d\n", prefix(T, str));
+                   break;
+           }
+    }
+
+    fclose( stdin );
 
     fclose( stdout );
 
