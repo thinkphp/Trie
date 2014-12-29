@@ -125,6 +125,8 @@ int main() {
            }
     }
 
+    free( T );
+
     fclose( stdin );
 
     fclose( stdout );
